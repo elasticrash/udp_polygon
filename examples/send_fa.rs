@@ -1,5 +1,5 @@
 extern crate udp_polygon;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::net::{IpAddr, Ipv4Addr};
 use std::{thread, time};
 use udp_polygon::{config::Address, config::Config, config::FromArguments, Polygon};
@@ -22,7 +22,7 @@ fn main() {
         }),
     );
 
-    let mut polygon = Polygon::configure(config);
+    let mut polygon = Polygon::configure(config).expect("failed to configure polygon");
 
     loop {
         println!("sending message...");
@@ -33,7 +33,7 @@ fn main() {
             })
             .unwrap()
             .into(),
-        );
+        ).expect("send failed");
         thread::sleep(time::Duration::from_secs(2));
     }
 }

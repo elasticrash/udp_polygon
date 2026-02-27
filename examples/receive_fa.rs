@@ -11,7 +11,7 @@ async fn main() {
         }],
         None,
     );
-    let mut polygon = Polygon::configure(config);
+    let mut polygon = Polygon::configure(config).expect("failed to configure polygon");
 
     let rx = polygon.receive();
 
