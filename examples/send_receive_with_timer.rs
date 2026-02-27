@@ -1,5 +1,5 @@
 extern crate udp_polygon;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::net::{IpAddr, Ipv4Addr};
 use std::sync::Arc;
 use std::{thread, time};
@@ -25,7 +25,7 @@ async fn main() {
         }),
     );
 
-    let mut polygon = Polygon::configure(config);
+    let mut polygon = Polygon::configure(config).expect("failed to configure polygon");
 
     let rx = polygon.receive();
     let pause = Arc::clone(&polygon.pause_timer_send);

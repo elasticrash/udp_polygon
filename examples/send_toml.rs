@@ -1,5 +1,5 @@
 extern crate udp_polygon;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::{thread, time};
 use udp_polygon::{config::Config, config::FromToml, Polygon};
 
@@ -12,7 +12,7 @@ pub struct Message {
 fn main() {
     let config = Config::from_toml("config_send.toml".to_string());
 
-    let mut polygon = Polygon::configure(config);
+    let mut polygon = Polygon::configure(config).expect("failed to configure polygon");
 
     loop {
         println!("sending message...");
@@ -23,7 +23,7 @@ fn main() {
             })
             .unwrap()
             .into(),
-        );
+        ).expect("send failed");
         thread::sleep(time::Duration::from_secs(2));
     }
 }

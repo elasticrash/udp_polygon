@@ -1,4 +1,4 @@
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
 use std::net::{IpAddr, Ipv4Addr};
@@ -66,7 +66,8 @@ pub trait FromEnv {
 /// ip = "127.0.0.1"
 /// port = 5060
 /// ```
-/// ``` rust
+/// ``` rust,no_run
+/// use udp_polygon::config::{Config, FromToml};
 /// let config = Config::from_toml("config.toml".to_string());
 /// ```
 impl FromToml for Config {
@@ -86,10 +87,12 @@ impl FromToml for Config {
 ///
 /// ## Example
 /// ``` rust
+/// use udp_polygon::config::{Address, Config, FromArguments};
+/// use std::net::{IpAddr, Ipv4Addr};
 /// let config = Config::from_arguments(
-///        vec![(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 5061)],
-///        Some((IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 5060)),
-///    );
+///     vec![Address { ip: IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), port: 5061 }],
+///     Some(Address { ip: IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), port: 5060 }),
+/// );
 /// ```
 impl FromArguments for Config {
     fn from_arguments(local: Vec<Address>, remote: Option<Address>) -> Self {
@@ -120,14 +123,12 @@ impl FromDefault for Config {
 /// * DEST_PORT: the remote port to send to
 ///
 /// ## Example
-///``` rust
+///``` rust,no_run
+/// use udp_polygon::config::{Config, FromEnv};
 /// let config = Config::from_env();
 /// ```
 impl FromEnv for Config {
     fn from_env() -> Self {
-        println!("BIND_ADDRS: {:?}", env::var("BIND_ADDRS"));
-        println!("BIND_PORT: {:?}", env::var("BIND_PORT"));
-
         let bind_address = match env::var("BIND_ADDRS") {
             Ok(addr) => addr
                 .parse::<IpAddr>()
